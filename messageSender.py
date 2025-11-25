@@ -1,13 +1,7 @@
 from pywa import WhatsApp, types
 from pywa.types.templates import *
-from dotenv import load_dotenv
-import os
 
-def send_reminder(course, task, due_date):
-    load_dotenv()
-    Wtoken = os.environ.get("TOKEN") #Meta cloudApi token
-    pID = os.environ.get("PHONEID") #Meta test number ID
-    myPhone = os.environ.get("PHONE")
+def send_reminder(Wtoken, pID, myPhone, course, task, due_date):
 
     #Create whatsApp client
     wa = WhatsApp(
