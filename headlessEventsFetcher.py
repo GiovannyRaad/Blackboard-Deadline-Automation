@@ -12,10 +12,7 @@ import urllib.parse
 import os
 import json
 from dotenv import load_dotenv
-load_dotenv()
 
-username = os.environ.get("UNI_USER")
-password = os.environ.get("UNI_PASS")
 
 
 def add_params(url, params):
@@ -97,37 +94,40 @@ def selenium_fetch():
         driver.quit()
         return data
 
+def run():
+    load_dotenv()
 
-#Main
+    username = os.environ.get("UNI_USER")
+    password = os.environ.get("UNI_PASS")
+    #Main
 
-try:
-    cookies = {}
-    with open("cookies.json", "r") as f:
-        selenium_cookies = json.load(f)
-        cookies = {c['name']: c['value'] for c in selenium_cookies}
-    data = fetch_events(cookies)
-    if not data.get("results"):
-        raise Exception("No events found with saved cookies.")
-    print("Fetched events using saved cookies.")
+    try:
+        cookies = {}
+        with open("cookies.json", "r") as f:
+            selenium_cookies = json.load(f)
+            cookies = {c['name']: c['value'] for c in selenium_cookies}
+        data = fetch_events(cookies)
+        if not data.get("results"):
+            raise Exception("No events found with saved cookies.")
+        print("Fetched events using saved cookies.")
 
-except Exception as e:
-    print(f"Error fetching events: {e}")
-    data = selenium_fetch()
-    print("Fetched events using selenium.")
+    except Exception as e:
+        print(f"Error fetching events: {e}")
+        data = selenium_fetch()
+        print("Fetched events using selenium.")
 
-finally:
-    events_data = {}
-    id = 0
-    for i in data.get("results", []):
-    
-        title = i.get("title", "No Title")
-        endDate = i.get("endDate", "No End Date")
-        course = i.get("calendarNameLocalizable", {}).get("rawValue", "No Course")
-        events_data[id] = {
-            "title": title,
-            "endDate": endDate,
-            "course": course
-        }
-        id += 1
-
-    print(json.dumps(events_data, indent=2))
+    finally:
+        events_data = {}
+        id = 0
+        for i in data.get("results", []):
+        
+            title = i.get("title", "No Title")
+            endDate = i.get("endDate", "No End Date")
+            course = i.get("calendarNameLocalizable", {}).get("rawValue", "No Course")
+            events_data[id] = {
+                "title": title,
+                "endDate": endDate,
+                "course": course
+            }
+            id += 1
+        return events_data
