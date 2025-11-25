@@ -54,7 +54,7 @@ def fetch_events(cookies):
     return data
 
 
-def selenium_fetch():
+def selenium_fetch(username, password):
     #returns json
     #Fetch using selenium headless browser
 
