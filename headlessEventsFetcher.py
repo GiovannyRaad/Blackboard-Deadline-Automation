@@ -28,10 +28,10 @@ def compute_midnight(tmz):
     return date_str
 
 
-def fetch_events(cookies):
+def fetch_events(cookies, tmz):
     #returns json
     #fetching events using requests
-    date_str = compute_midnight("Asia/Beirut")
+    date_str = compute_midnight(tmz)
 
     params = {
         "date": date_str,
@@ -53,7 +53,7 @@ def fetch_events(cookies):
     return data
 
 
-def selenium_fetch(username, password):
+def selenium_fetch(username, password, tmz):
     #returns json
     #Fetch using selenium headless browser
 
@@ -86,14 +86,14 @@ def selenium_fetch(username, password):
         with open("cookies.json", "w") as f:
             json.dump(selenium_cookies, f)
         cookies = {c['name']: c['value'] for c in selenium_cookies}
-        data = fetch_events(cookies)
+        data = fetch_events(cookies, tmz)
         
 
     finally:
         driver.quit()
         return data
 
-def run(username, password):
+def run(username, password, tmz):
     #Main
 
     try:
@@ -101,14 +101,14 @@ def run(username, password):
         with open("cookies.json", "r") as f:
             selenium_cookies = json.load(f)
             cookies = {c['name']: c['value'] for c in selenium_cookies}
-        data = fetch_events(cookies)
+        data = fetch_events(cookies, tmz)
         if not data.get("results"):
             raise Exception("No events found with saved cookies.")
         print("Fetched events using saved cookies.")
 
     except Exception as e:
         print(f"Error fetching events: {e}")
-        data = selenium_fetch(username, password)
+        data = selenium_fetch(username, password, tmz)
         print("Fetched events using selenium.")
 
     finally:
