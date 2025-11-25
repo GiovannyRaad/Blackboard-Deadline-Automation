@@ -9,9 +9,8 @@ from zoneinfo import ZoneInfo
 from datetime import datetime, timezone
 import requests
 import urllib.parse
-import os
 import json
-from dotenv import load_dotenv
+
 
 
 
@@ -94,11 +93,7 @@ def selenium_fetch(username, password):
         driver.quit()
         return data
 
-def run():
-    load_dotenv()
-
-    username = os.environ.get("UNI_USER")
-    password = os.environ.get("UNI_PASS")
+def run(username, password):
     #Main
 
     try:
@@ -113,7 +108,7 @@ def run():
 
     except Exception as e:
         print(f"Error fetching events: {e}")
-        data = selenium_fetch()
+        data = selenium_fetch(username, password)
         print("Fetched events using selenium.")
 
     finally:
