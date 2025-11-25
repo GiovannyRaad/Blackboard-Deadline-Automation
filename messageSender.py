@@ -1,7 +1,7 @@
 from pywa import WhatsApp, types
 from pywa.types.templates import *
 
-def send_reminder(Wtoken, pID, myPhone, course, task, due_date):
+def send_reminder(Wtoken, pID, myPhone, template_name, course, task, due_date):
 
     #Create whatsApp client
     wa = WhatsApp(
@@ -12,7 +12,7 @@ def send_reminder(Wtoken, pID, myPhone, course, task, due_date):
 
     wa.send_template(
         to=myPhone,  # recipient number
-        name="deadline_reminder",  # template name
+        name=template_name,  # template name
         language=TemplateLanguage.ENGLISH_US,
         params=[
             BodyText.params(course, task, due_date)

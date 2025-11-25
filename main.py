@@ -22,6 +22,7 @@ if __name__ == "__main__":
     Wtoken = os.environ.get("TOKEN") #Meta cloudApi token
     pID = os.environ.get("PHONEID") #Meta test number ID
     myPhone = os.environ.get("PHONE") #Your phone number with country code
+    template_name = os.environ.get("TEMPLATE_NAME") #WhatsApp template name
 
     event_data = headlessEventsFetcher.run(username, password, tmz)
 
@@ -31,5 +32,5 @@ if __name__ == "__main__":
         due_date =  event.get("endDate", "No End Date")
         due_date = "*" + convert_iso_to_deadline(due_date) + "*"
 
-        messageSender.send_reminder(Wtoken, pID, myPhone, course, task, due_date)
+        messageSender.send_reminder(Wtoken, pID, myPhone, template_name, course, task, due_date)
 
