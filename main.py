@@ -1,0 +1,35 @@
+from dotenv import load_dotenv
+from datetime import datetime
+import os
+
+import headlessEventsFetcher
+import messageSender
+
+def convert_iso_to_deadline(iso_time):
+    # Parse ISO8601 string into datetime object
+    dt = datetime.fromisoformat(iso_time.replace("Z", "+00:00"))
+
+    return dt.strftime("%B %d, %Y at %H:%M")
+
+if __name__ == "__main__":
+
+    load_dotenv()
+
+    username = os.environ.get("UNI_USER")
+    password = os.environ.get("UNI_PASS")
+    tmz = os.environ.get("TIMEZONE")  # e.g., "Asia/Beirut"
+
+    Wtoken = os.environ.get("TOKEN") #Meta cloudApi token
+    pID = os.environ.get("PHONEID") #Meta test number ID
+    myPhone = os.environ.get("PHONE") #Your phone number with country code
+
+    event_data = headlessEventsFetcher.run(username, password, tmz)
+
+    for event in event_data.values():
+        course = "*" + event.get("course", "No Course") + "*"
+        task = "*" + event.get("title", "No Title") + "*"
+        due_date =  event.get("endDate", "No End Date")
+        due_date = "*" + convert_iso_to_deadline(due_date) + "*"
+
+        messageSender.send_reminder(Wtoken, pID, myPhone, course, task, due_date)
+
