@@ -1,5 +1,8 @@
-![My Project Logo](assets/logo.png) # G.E.R.A.S (Gio's Essential Reminder Automated System)
-
+<h1 align="left">
+  <img src="assets/icon.png" alt="Logo" width="35">
+  G.E.R.A.S (Gio's Essential Reminder Automated System)
+  
+</h1>
 G.E.R.A.S is a personal automation tool that fetches deadlines from Blackboard and sends reminders via WhatsApp. It was designed primarily for my personal university use.
 
 ---
@@ -105,3 +108,6 @@ The above copyright notice and this permission notice shall be included in all c
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 ```
+
+![Footer Banner](assets/banner.png)
+
