@@ -9,9 +9,9 @@ G.E.R.A.S is a personal automation tool that fetches deadlines from Blackboard a
 
 <h3 align="left">
   Example: 
-  
 </h3>
 <img src="assets/Screenshot.jpeg" alt="Logo" width="500">
+
 ## Features
 
 * Fetches deadlines from Blackboard automatically.
