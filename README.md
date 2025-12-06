@@ -7,6 +7,11 @@ G.E.R.A.S is a personal automation tool that fetches deadlines from Blackboard a
 
 ---
 
+<h3 align="left">
+  Example: 
+  
+</h3>
+<img src="assets/Screenshot.jpeg" alt="Logo" width="500">
 ## Features
 
 * Fetches deadlines from Blackboard automatically.
@@ -47,8 +52,8 @@ TEMPLATE_NAME          # Approved WhatsApp message template name
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/yourusername/GERAS.git
-cd GERAS
+git clone https://github.com/GiovannyRaad/Geras.git
+cd Geras
 ```
 
 2. Create a virtual environment:
