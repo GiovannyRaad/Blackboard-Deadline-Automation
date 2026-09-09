@@ -33,17 +33,25 @@ Blackboard Deadline Automation is a personal automation tool that fetches deadli
 
 ## Requirements
 
-Set the following environment variables:
+Each half of the project keeps its own `.env`, with a `.env.example` template
+beside it.
+
+`skills/blackboard-deadlines/.env`
 
 ```
 UNI_USER               # Blackboard username
 UNI_PASS               # Blackboard password
+TIMEZONE               # Timezone for scheduling
+```
+
+`whatsapp/.env`
+
+```
 TOKEN                  # Meta Cloud API token
 PHONEID                # Sender phone number ID
 PHONE                  # Receiver phone number
-BUSINESS_ACOUNT_ID     # Meta Business Account ID
-TIMEZONE               # Timezone for scheduling
 TEMPLATE_NAME          # Approved WhatsApp message template name
+BUSINESS_ACOUNT_ID     # Meta Business Account ID (not yet read by any code)
 ```
 ---
 
@@ -75,12 +83,15 @@ pip install -r requirements.txt
 playwright install firefox
 ```
 
-5. Create a `.env` file in the repo root with the environment variables listed
-   above. Use `skills/blackboard-deadlines/.env.example` as a template:
+5. Create a `.env` in each half of the project, from the templates beside them:
 
 ```bash
-cp skills/blackboard-deadlines/.env.example .env
+cp skills/blackboard-deadlines/.env.example skills/blackboard-deadlines/.env
+cp whatsapp/.env.example whatsapp/.env
 ```
+
+   The Blackboard credentials live with the skill, the Meta Cloud API
+   credentials with the WhatsApp integration. `main.py` loads both.
 
 ---
 
@@ -108,12 +119,13 @@ requirements.txt
 skills/
   blackboard-deadlines/                  # the deadline-fetching skill
     SKILL.md
-    .env.example                         # template for the root .env
+    .env.example                         # Blackboard credentials template
     headlessEventsFetcher.py
     eventsFetcher.py                     # WIP browser-free SAML login
     cookies.json                         # cached session, written on first login
     requirements.txt
 whatsapp/                                # reminder delivery
+  .env.example                           # Meta Cloud API credentials template
   messageSender.py
   webhook.py
   requirements.txt

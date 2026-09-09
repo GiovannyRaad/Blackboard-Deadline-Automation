@@ -9,7 +9,7 @@ Fetches due-date calendar items from Blackboard Ultra and returns them as struct
 
 ## Requirements
 
-Environment variables (see `.env.example` in this folder for a template):
+Environment variables, read from `.env` in this folder (copy `.env.example`):
 
 - `UNI_USER` — Blackboard username
 - `UNI_PASS` — Blackboard password

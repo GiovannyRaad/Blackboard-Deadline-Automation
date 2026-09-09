@@ -5,7 +5,9 @@ import sys
 
 # The fetching half lives in the skill folder; the WhatsApp half in its own.
 ROOT = os.path.dirname(os.path.abspath(__file__))
-sys.path.insert(0, os.path.join(ROOT, "skills", "blackboard-deadlines"))
+SKILL_DIR = os.path.join(ROOT, "skills", "blackboard-deadlines")
+WHATSAPP_DIR = os.path.join(ROOT, "whatsapp")
+sys.path.insert(0, SKILL_DIR)
 sys.path.insert(0, ROOT)
 
 import headlessEventsFetcher
@@ -19,7 +21,9 @@ def convert_iso_to_deadline(iso_time):
 
 if __name__ == "__main__":
 
-    load_dotenv()
+    # Each half keeps its own .env next to its code.
+    load_dotenv(os.path.join(SKILL_DIR, ".env"))
+    load_dotenv(os.path.join(WHATSAPP_DIR, ".env"))
 
     username = os.environ.get("UNI_USER")
     password = os.environ.get("UNI_PASS")
