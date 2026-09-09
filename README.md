@@ -17,7 +17,7 @@ Blackboard Deadline Automation is a personal automation tool that fetches deadli
 * Fetches deadlines from Blackboard automatically.
 * Sends WhatsApp reminders using **Meta’s [WhatsApp Cloud API](https://developers.facebook.com/docs/whatsapp/cloud-api/get-started)**.
 * Uses existing session cookies when possible to avoid repeated logins.
-* Headless browser support via Selenium if no cookies exist.
+* Headless browser support via Playwright if no cookies exist.
 * Stores session cookies for faster subsequent runs.
 * Fully configurable for personal accounts and time zones.
 
@@ -26,7 +26,7 @@ Blackboard Deadline Automation is a personal automation tool that fetches deadli
 ## Tech Stack
 
 * Python 3.11
-* Libraries: `selenium`, `pywa`, `requests`
+* Libraries: `playwright`, `pywa`, `requests`
 * Meta WhatsApp Cloud API ([Guide](https://developers.facebook.com/docs/whatsapp/cloud-api/get-started))
 > ⚠️ WhatsApp per-message pricing may apply: [Pricing](https://business.whatsapp.com/products/platform-pricing)
 ---
@@ -69,7 +69,13 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-4. Create a `.env` file with the environment variables listed above.
+4. Download the browser Playwright drives:
+
+```bash
+playwright install firefox
+```
+
+5. Create a `.env` file with the environment variables listed above.
 
 ---
 
@@ -80,7 +86,7 @@ python main.py
 ```
 
 * The bot will attempt to use existing cookies from `cookies.json` to log into Blackboard.
-* If no cookies exist, Selenium headless browser will log in and store cookies in the JSON file.
+* If no cookies exist, a Playwright headless browser will log in and store cookies in the JSON file.
 * Fetches upcoming deadlines and sends reminders via WhatsApp.
 * Intended to be scheduled to run periodically (e.g., weekly).
 
@@ -92,10 +98,19 @@ python main.py
 
 ```
 .env
-cookies.json
-headlessEventsFetcher.py
-main.py
-messageSender.py
+main.py                                  # ties fetching and sending together
+requirements.txt
+skills/
+  blackboard-deadlines/                  # the deadline-fetching skill
+    SKILL.md
+    headlessEventsFetcher.py
+    eventsFetcher.py                     # WIP browser-free SAML login
+    cookies.json                         # cached session, written on first login
+    requirements.txt
+whatsapp/                                # reminder delivery
+  messageSender.py
+  webhook.py
+  requirements.txt
 ```
 
 ---

@@ -15,8 +15,12 @@ Environment variables:
 - `UNI_PASS` — Blackboard password
 - `TIMEZONE` — IANA timezone used to compute "today" (e.g. `Asia/Beirut`)
 
-Dependencies: `pip install -r requirements.txt`. Selenium fallback needs Firefox and
-`geckodriver` (path is set in `selenium_fetch`).
+Dependencies: `pip install -r requirements.txt`, then install the browser the
+fallback drives:
+
+```bash
+playwright install firefox
+```
 
 ## Usage
 
@@ -53,7 +57,7 @@ An id-keyed mapping, one entry per upcoming deadline:
 
 1. Reuses cached session cookies from `cookies.json` (written next to this file).
 2. If those are missing or return no results, logs in through a headless Firefox
-   SAML flow, re-caches the cookies, and retries.
+   SAML flow driven by Playwright, re-caches the cookies, and retries.
 
 `eventsFetcher.py` is an in-progress pure-`requests` version of the SAML login that
 avoids the browser dependency. It is exploratory and runs at import — not wired in.

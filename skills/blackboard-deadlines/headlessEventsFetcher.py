@@ -1,10 +1,4 @@
-from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from selenium.webdriver.firefox.options import Options
-from selenium.webdriver.firefox.service import Service
-from selenium.webdriver.common.by import By
+from playwright.sync_api import sync_playwright
 from zoneinfo import ZoneInfo
 from datetime import datetime, timezone
 import requests
@@ -57,45 +51,36 @@ def fetch_events(cookies, tmz):
     return data
 
 
-def selenium_fetch(username, password, tmz):
+def browser_fetch(username, password, tmz):
     #returns json
-    #Fetch using selenium headless browser
+    #Fetch using playwright headless browser
 
-    
-    options = Options()
-    options.add_argument("--headless") #no gui
-    caps = DesiredCapabilities().FIREFOX
-    caps['marionette'] = True
-    caps['moz:firefoxOptions'] = {'args': ['-headless']}
+    with sync_playwright() as p:
+        browser = p.firefox.launch(headless=True)  #no gui
+        try:
+            context = browser.new_context()
+            page = context.new_page()
 
-    service = Service("/usr/local/bin/geckodriver")
-    try:
+            #Go to login page
+            page.goto("https://elearn.lau.edu.lb/auth-saml/saml/login?apId=_240_1&redirectUrl=https://elearn.lau.edu.lb/ultra")
 
-        driver = webdriver.Firefox(options=options, service=service)
+            # Wait and fill login fields
+            page.wait_for_selector("#username", timeout=10000)
+            page.fill("#username", username)
+            page.fill("#password", password)
+            page.press("#password", "Enter")
 
-        #Go to login page
-        driver.get("https://elearn.lau.edu.lb/auth-saml/saml/login?apId=_240_1&redirectUrl=https://elearn.lau.edu.lb/ultra")
+            # Wait for redirect
+            page.wait_for_url(lambda url: "ultra" in url, timeout=10000)
 
-        # Wait and fill login fields
-        search = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "username")))
-        search.send_keys(username)
-        search = WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.ID, "password")))
-        search.send_keys(password)
-        search.submit()
+            browser_cookies = context.cookies()
+            with open(COOKIES_PATH, "w") as f:
+                json.dump(browser_cookies, f)
+            cookies = {c['name']: c['value'] for c in browser_cookies}
+            return fetch_events(cookies, tmz)
 
-        # Wait for redirect
-        WebDriverWait(driver, 10).until(EC.url_contains("ultra"))
-
-        selenium_cookies = driver.get_cookies()
-        with open(COOKIES_PATH, "w") as f:
-            json.dump(selenium_cookies, f)
-        cookies = {c['name']: c['value'] for c in selenium_cookies}
-        data = fetch_events(cookies, tmz)
-        
-
-    finally:
-        driver.quit()
-        return data
+        finally:
+            browser.close()
 
 def run(username, password, tmz):
     #Main
@@ -103,8 +88,8 @@ def run(username, password, tmz):
     try:
         cookies = {}
         with open(COOKIES_PATH, "r") as f:
-            selenium_cookies = json.load(f)
-            cookies = {c['name']: c['value'] for c in selenium_cookies}
+            saved_cookies = json.load(f)
+            cookies = {c['name']: c['value'] for c in saved_cookies}
         data = fetch_events(cookies, tmz)
         if not data.get("results"):
             raise Exception("No events found with saved cookies.")
@@ -112,8 +97,8 @@ def run(username, password, tmz):
 
     except Exception as e:
         print(f"Error fetching events: {e}")
-        data = selenium_fetch(username, password, tmz)
-        print("Fetched events using selenium.")
+        data = browser_fetch(username, password, tmz)
+        print("Fetched events using playwright.")
 
     finally:
         events_data = {}
