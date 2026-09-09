@@ -1,5 +1,5 @@
 ---
-name: blackboard-deadlines
+name: blackboard
 description: Read a student's LAU Blackboard as JSON — upcoming assignment deadlines from the calendar, and recent activity stream posts where instructors announce exams, quizzes, and materials. Use when asked what is due, what coursework or exams are coming up, whether anything was posted or announced, or to check Blackboard generally.
 ---
 
@@ -36,10 +36,10 @@ has a *due date*, check the stream too.
 Both print JSON to **stdout**; progress messages go to **stderr**. Parse stdout.
 
 ```bash
-python skills/blackboard-deadlines/eventsFetcher.py
+python skills/blackboard/eventsFetcher.py
 
-python skills/blackboard-deadlines/streamFetcher.py            # last 7 days
-python skills/blackboard-deadlines/streamFetcher.py --days 30  # wider window
+python skills/blackboard/streamFetcher.py            # last 7 days
+python skills/blackboard/streamFetcher.py --days 30  # wider window
 ```
 
 They work from any directory. Or import them:
@@ -115,7 +115,7 @@ rejects it, so **do not run `cookieFetcher.py` preemptively.** Run it only to
 force a fresh login, or if a fetcher reports a login failure:
 
 ```bash
-python skills/blackboard-deadlines/cookieFetcher.py
+python skills/blackboard/cookieFetcher.py
 ```
 
 If it fails, check in this order: credentials in `.env`, then whether

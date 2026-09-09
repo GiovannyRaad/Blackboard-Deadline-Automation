@@ -37,7 +37,7 @@ Blackboard Deadline Automation is a personal automation tool that fetches deadli
 Each half of the project keeps its own `.env`, with a `.env.example` template
 beside it.
 
-`skills/blackboard-deadlines/.env`
+`skills/blackboard/.env`
 
 ```
 UNI_USER               # Blackboard username
@@ -87,7 +87,7 @@ playwright install firefox
 5. Create a `.env` in each half of the project, from the templates beside them:
 
 ```bash
-cp skills/blackboard-deadlines/.env.example skills/blackboard-deadlines/.env
+cp skills/blackboard/.env.example skills/blackboard/.env
 cp whatsapp/.env.example whatsapp/.env
 ```
 
@@ -117,7 +117,7 @@ python main.py
 main.py                                  # ties fetching and sending together
 requirements.txt
 skills/
-  blackboard-deadlines/                  # the deadline-fetching skill
+  blackboard/                            # the Blackboard-reading skill
     SKILL.md
     .env / .env.example                  # Blackboard credentials
     eventsFetcher.py                     # calls the calendar API

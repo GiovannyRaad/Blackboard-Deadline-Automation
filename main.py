@@ -5,7 +5,7 @@ import sys
 
 # The fetching half lives in the skill folder; the WhatsApp half in its own.
 ROOT = os.path.dirname(os.path.abspath(__file__))
-SKILL_DIR = os.path.join(ROOT, "skills", "blackboard-deadlines")
+SKILL_DIR = os.path.join(ROOT, "skills", "blackboard")
 WHATSAPP_DIR = os.path.join(ROOT, "whatsapp")
 sys.path.insert(0, SKILL_DIR)
 sys.path.insert(0, ROOT)
