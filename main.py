@@ -10,7 +10,7 @@ WHATSAPP_DIR = os.path.join(ROOT, "whatsapp")
 sys.path.insert(0, SKILL_DIR)
 sys.path.insert(0, ROOT)
 
-import headlessEventsFetcher
+import eventsFetcher
 from whatsapp import messageSender
 
 def convert_iso_to_deadline(iso_time):
@@ -34,7 +34,7 @@ if __name__ == "__main__":
     myPhone = os.environ.get("PHONE") #Your phone number with country code
     template_name = os.environ.get("TEMPLATE_NAME") #WhatsApp template name
 
-    event_data = headlessEventsFetcher.run(username, password, tmz)
+    event_data = eventsFetcher.run(username, password, tmz)
 
     for event in event_data.values():
         course = "*" + event.get("course", "No Course") + "*"

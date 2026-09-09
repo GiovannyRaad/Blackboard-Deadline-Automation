@@ -113,19 +113,18 @@ python main.py
 ## Project Structure
 
 ```
-.env
 main.py                                  # ties fetching and sending together
 requirements.txt
 skills/
   blackboard-deadlines/                  # the deadline-fetching skill
     SKILL.md
-    .env.example                         # Blackboard credentials template
-    headlessEventsFetcher.py
-    eventsFetcher.py                     # WIP browser-free SAML login
+    .env / .env.example                  # Blackboard credentials
+    eventsFetcher.py                     # calls the calendar API
+    cookieFetcher.py                     # logs in, caches the session
     cookies.json                         # cached session, written on first login
     requirements.txt
 whatsapp/                                # reminder delivery
-  .env.example                           # Meta Cloud API credentials template
+  .env / .env.example                    # Meta Cloud API credentials
   messageSender.py
   webhook.py
   requirements.txt

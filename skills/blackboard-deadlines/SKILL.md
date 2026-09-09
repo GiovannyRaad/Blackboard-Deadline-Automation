@@ -27,14 +27,21 @@ playwright install firefox
 Run standalone to print JSON to stdout:
 
 ```bash
-python skills/blackboard-deadlines/headlessEventsFetcher.py
+python skills/blackboard-deadlines/eventsFetcher.py
 ```
 
 Or import it:
 
 ```python
-import headlessEventsFetcher
-events = headlessEventsFetcher.run(username, password, tmz)
+import eventsFetcher
+events = eventsFetcher.run(username, password, tmz)
+```
+
+If the cached session stops working, `eventsFetcher` logs in again on its own.
+To refresh the cookies by hand:
+
+```bash
+python skills/blackboard-deadlines/cookieFetcher.py
 ```
 
 ## Output
@@ -55,12 +62,14 @@ An id-keyed mapping, one entry per upcoming deadline:
 
 ## How it works
 
-1. Reuses cached session cookies from `cookies.json` (written next to this file).
-2. If those are missing or return no results, logs in through a headless Firefox
-   SAML flow driven by Playwright, re-caches the cookies, and retries.
+Two scripts, one job each:
 
-`eventsFetcher.py` is an in-progress pure-`requests` version of the SAML login that
-avoids the browser dependency. It is exploratory and runs at import — not wired in.
+- `eventsFetcher.py` — calls the calendar API and shapes the results.
+- `cookieFetcher.py` — owns the login, and the `cookies.json` cache beside it.
+
+`eventsFetcher` tries the cached cookies first. If the cache is missing, or the API
+answers 401/403, or no events come back, it asks `cookieFetcher` for a fresh login
+through a headless Firefox SAML flow and retries once.
 
 ## Delivering reminders
 

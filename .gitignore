@@ -1,5 +1,4 @@
 .env
 cookies.json
 venv
-eventsFetcher.py
 __pycache__/
