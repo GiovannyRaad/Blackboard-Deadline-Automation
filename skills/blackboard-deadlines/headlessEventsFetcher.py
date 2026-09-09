@@ -10,6 +10,10 @@ from datetime import datetime, timezone
 import requests
 import urllib.parse
 import json
+import os
+
+# Resolve the cookie cache next to this file so the skill works from any cwd.
+COOKIES_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), "cookies.json")
 
 
 
@@ -83,7 +87,7 @@ def selenium_fetch(username, password, tmz):
         WebDriverWait(driver, 10).until(EC.url_contains("ultra"))
 
         selenium_cookies = driver.get_cookies()
-        with open("cookies.json", "w") as f:
+        with open(COOKIES_PATH, "w") as f:
             json.dump(selenium_cookies, f)
         cookies = {c['name']: c['value'] for c in selenium_cookies}
         data = fetch_events(cookies, tmz)
@@ -98,7 +102,7 @@ def run(username, password, tmz):
 
     try:
         cookies = {}
-        with open("cookies.json", "r") as f:
+        with open(COOKIES_PATH, "r") as f:
             selenium_cookies = json.load(f)
             cookies = {c['name']: c['value'] for c in selenium_cookies}
         data = fetch_events(cookies, tmz)
@@ -126,3 +130,16 @@ def run(username, password, tmz):
             }
             id += 1
         return events_data
+
+
+if __name__ == "__main__":
+    # Standalone entrypoint: emit the deadlines as JSON on stdout.
+    import sys
+
+    events = run(
+        os.environ.get("UNI_USER"),
+        os.environ.get("UNI_PASS"),
+        os.environ.get("TIMEZONE"),
+    )
+    json.dump(events, sys.stdout, indent=2)
+    print()

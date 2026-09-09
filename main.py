@@ -1,9 +1,15 @@
 from dotenv import load_dotenv
 from datetime import datetime
 import os
+import sys
+
+# The fetching half lives in the skill folder; the WhatsApp half in its own.
+ROOT = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(0, os.path.join(ROOT, "skills", "blackboard-deadlines"))
+sys.path.insert(0, ROOT)
 
 import headlessEventsFetcher
-import messageSender
+from whatsapp import messageSender
 
 def convert_iso_to_deadline(iso_time):
     # Parse ISO8601 string into datetime object
@@ -33,4 +39,3 @@ if __name__ == "__main__":
         due_date = "*" + convert_iso_to_deadline(due_date) + "*"
 
         messageSender.send_reminder(Wtoken, pID, myPhone, template_name, course, task, due_date)
-
