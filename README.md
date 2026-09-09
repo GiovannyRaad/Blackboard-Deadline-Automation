@@ -75,7 +75,12 @@ pip install -r requirements.txt
 playwright install firefox
 ```
 
-5. Create a `.env` file with the environment variables listed above.
+5. Create a `.env` file in the repo root with the environment variables listed
+   above. Use `skills/blackboard-deadlines/.env.example` as a template:
+
+```bash
+cp skills/blackboard-deadlines/.env.example .env
+```
 
 ---
 
@@ -103,6 +108,7 @@ requirements.txt
 skills/
   blackboard-deadlines/                  # the deadline-fetching skill
     SKILL.md
+    .env.example                         # template for the root .env
     headlessEventsFetcher.py
     eventsFetcher.py                     # WIP browser-free SAML login
     cookies.json                         # cached session, written on first login
