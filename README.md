@@ -1,9 +1,9 @@
 <h1 align="left">
   <img src="assets/icon.png" alt="Logo" width="35">
-  G.E.R.A.S (Gio's Essential Reminder Automated System)
+  Blackboard Deadline Automation
   
 </h1>
-G.E.R.A.S is a personal automation tool that fetches deadlines from Blackboard and sends reminders via WhatsApp. It was designed primarily for my personal university use.
+Blackboard Deadline Automation is a personal automation tool that fetches deadlines from Blackboard and sends reminders via WhatsApp. It was designed primarily for my personal university use.
 
 ---
 
@@ -52,8 +52,8 @@ TEMPLATE_NAME          # Approved WhatsApp message template name
 1. Clone the repository:
 
 ```bash
-git clone https://github.com/GiovannyRaad/Geras.git
-cd Geras
+git clone https://github.com/GiovannyRaad/Blackboard-Deadline-Automation.git
+cd Blackboard-Deadline-Automation
 ```
 
 2. Create a virtual environment:
