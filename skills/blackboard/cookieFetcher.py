@@ -25,7 +25,15 @@ PAGE_TIMEOUT = 60000
 def load_cookies():
     # name -> value, as requests wants them. Raises if there is no cache yet.
     with open(COOKIES_PATH, "r") as f:
-        return {c["name"]: c["value"] for c in json.load(f)}
+        cached = json.load(f)
+
+    try:
+        return {c["name"]: c["value"] for c in cached}
+    except (TypeError, KeyError) as e:
+        # Valid JSON of the wrong shape. Raise something the fetchers' recovery
+        # path catches, so a mangled cache triggers a fresh login rather than
+        # crashing.
+        raise ValueError(f"{COOKIES_PATH} is not a list of cookies.") from e
 
 
 def save_cookies(browser_cookies):

@@ -50,6 +50,13 @@ class InvalidCookies(Exception):
     pass
 
 
+class StreamIncomplete(Exception):
+    # Raised when the API never finished assembling the stream. Deliberately not
+    # caught by run(): the session is fine, so logging in again would not help,
+    # and returning [] would look identical to "nothing was posted".
+    pass
+
+
 def get_xsrf(session):
     # The token is embedded in the stream page's HTML, not in a cookie.
     html = session.get(STREAM_PAGE, timeout=30).text
@@ -82,8 +89,11 @@ def fetch_stream(cookies, polls=6, delay=3):
         response.raise_for_status()
 
         data = response.json()
-        if data.get("sv_streamEntries"):
-            break
+        # Entries arrived, or the API says it has nothing more coming -- either
+        # way this is the real answer. sv_moreData stays true only while the
+        # stream is still being assembled.
+        if data.get("sv_streamEntries") or not data.get("sv_moreData"):
+            return data
 
         # Hand the provider state back so the next poll returns the entries.
         providers = {
@@ -94,7 +104,10 @@ def fetch_stream(cookies, polls=6, delay=3):
         if attempt < polls - 1:
             time.sleep(delay)
 
-    return data
+    raise StreamIncomplete(
+        f"The stream API still reported more data after {polls} polls; "
+        "no entries were returned. Try again."
+    )
 
 
 def html_to_text(html):

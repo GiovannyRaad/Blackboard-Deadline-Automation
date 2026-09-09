@@ -160,6 +160,7 @@ TOKEN                  # Meta Cloud API token
 PHONEID                # Sender phone number ID
 PHONE                  # Receiver phone number
 TEMPLATE_NAME          # Approved WhatsApp message template name
+WEBHOOK_VERIFY_TOKEN   # Shared secret for webhook.py
 BUSINESS_ACOUNT_ID     # Meta Business Account ID (not read by any code)
 ```
 

@@ -15,7 +15,13 @@ from whatsapp import messageSender
 
 def convert_iso_to_deadline(iso_time):
     # Parse ISO8601 string into datetime object
-    dt = datetime.fromisoformat(iso_time.replace("Z", "+00:00"))
+    try:
+        dt = datetime.fromisoformat(iso_time.replace("Z", "+00:00"))
+    except (AttributeError, ValueError):
+        # Calendar items can arrive without a usable endDate, where the fetcher
+        # substitutes "No End Date". Pass it through rather than killing the run
+        # before any reminder is sent.
+        return iso_time
 
     return dt.strftime("%B %d, %Y at %H:%M")
 
