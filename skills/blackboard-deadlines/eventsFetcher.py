@@ -13,6 +13,7 @@ from datetime import datetime, timezone
 import requests
 import urllib.parse
 import json
+import sys
 import os
 
 import cookieFetcher
@@ -81,18 +82,17 @@ def run(username, password, tmz):
     # the API answers 401 when the cookies have actually expired.
     try:
         data = fetch_events(cookieFetcher.load_cookies(), tmz)
-        print("Fetched events using saved cookies.")
+        print("Fetched events using saved cookies.", file=sys.stderr)
 
     except (InvalidCookies, OSError, ValueError) as e:
-        print(f"Refreshing cookies: {e}")
+        print(f"Refreshing cookies: {e}", file=sys.stderr)
         data = fetch_events(cookieFetcher.refresh(username, password), tmz)
-        print("Fetched events using a fresh login.")
+        print("Fetched events using a fresh login.", file=sys.stderr)
 
     return parse_events(data)
 
 
 if __name__ == "__main__":
-    import sys
     from dotenv import load_dotenv
 
     load_dotenv(os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env"))

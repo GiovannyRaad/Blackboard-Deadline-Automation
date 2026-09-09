@@ -15,6 +15,7 @@ Blackboard Deadline Automation is a personal automation tool that fetches deadli
 ## Features
 
 * Fetches deadlines from Blackboard automatically.
+* Reads the activity stream, where instructors post exams and materials.
 * Sends WhatsApp reminders using **Meta’s [WhatsApp Cloud API](https://developers.facebook.com/docs/whatsapp/cloud-api/get-started)**.
 * Uses existing session cookies when possible to avoid repeated logins.
 * Headless browser support via Playwright if no cookies exist.
@@ -120,6 +121,7 @@ skills/
     SKILL.md
     .env / .env.example                  # Blackboard credentials
     eventsFetcher.py                     # calls the calendar API
+    streamFetcher.py                     # calls the activity stream API
     cookieFetcher.py                     # logs in, caches the session
     cookies.json                         # cached session, written on first login
     requirements.txt

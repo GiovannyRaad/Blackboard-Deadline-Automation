@@ -1,11 +1,16 @@
 ---
 name: blackboard-deadlines
-description: Fetch upcoming assignment deadlines from Blackboard (LAU elearn) as structured JSON. Use when asked for upcoming coursework, due dates, assignment deadlines, or what is due on Blackboard.
+description: Read a student's Blackboard (LAU elearn) as structured JSON — upcoming assignment deadlines from the calendar, and recent activity stream posts where instructors announce exams, quizzes and materials. Use when asked what is due, what coursework is upcoming, or what is new on Blackboard.
 ---
 
-# Blackboard Deadlines
+# Blackboard
 
-Fetches due-date calendar items from Blackboard Ultra and returns them as structured data.
+Two capabilities, both returning JSON on stdout:
+
+1. **Deadlines** — due-date calendar items (`eventsFetcher.py`).
+2. **Activity stream** — recent homepage posts (`streamFetcher.py`). Instructors
+   often announce exams and quizzes here without ever setting a calendar due
+   date, so check this as well as the deadlines.
 
 ## Requirements
 
@@ -24,17 +29,27 @@ playwright install firefox
 
 ## Usage
 
-Run standalone to print JSON to stdout:
+Deadlines:
 
 ```bash
 python skills/blackboard-deadlines/eventsFetcher.py
 ```
 
-Or import it:
+Activity stream — defaults to the last 7 days, `--days` widens the window:
+
+```bash
+python skills/blackboard-deadlines/streamFetcher.py
+python skills/blackboard-deadlines/streamFetcher.py --days 30
+```
+
+Status messages go to stderr, so stdout is always parseable JSON.
+
+Or import them:
 
 ```python
-import eventsFetcher
+import eventsFetcher, streamFetcher
 events = eventsFetcher.run(username, password, tmz)
+posts = streamFetcher.run(days=7, username=username, password=password)
 ```
 
 If the cached session stops working, `eventsFetcher` logs in again on its own.
@@ -46,7 +61,7 @@ python skills/blackboard-deadlines/cookieFetcher.py
 
 ## Output
 
-An id-keyed mapping, one entry per upcoming deadline:
+`eventsFetcher` returns an id-keyed mapping, one entry per upcoming deadline:
 
 ```json
 {
@@ -58,18 +73,45 @@ An id-keyed mapping, one entry per upcoming deadline:
 }
 ```
 
-`endDate` is ISO 8601 UTC. Format it for display before showing it to a user.
+`streamFetcher` returns a list, newest first:
+
+```json
+[
+  {
+    "title": "First Quiz – Tuesday, September 15, 2026",
+    "course": "Parallel Progg/Multic.&Cluster",
+    "posted": "2026-09-08T11:01:04.445000+00:00",
+    "type": "content",
+    "body": "Dear Students, We will conduct the first quiz on ...",
+    "url": null
+  }
+]
+```
+
+`type` is one of `announcement`, `content`, `grade`, `discussion`, `calendar`,
+`blog`, `wiki`, `achievement`. Dates are ISO 8601 UTC — format them for display
+before showing them to a user.
+
+An empty result is a real answer: no deadlines due, or nothing posted in the
+window.
 
 ## How it works
 
-Two scripts, one job each:
+Three scripts, one job each:
 
 - `eventsFetcher.py` — calls the calendar API and shapes the results.
+- `streamFetcher.py` — calls the activity stream API and shapes the results.
 - `cookieFetcher.py` — owns the login, and the `cookies.json` cache beside it.
 
-`eventsFetcher` tries the cached cookies first. If the cache is missing, or the API
-answers 401/403, or no events come back, it asks `cookieFetcher` for a fresh login
-through a headless Firefox SAML flow and retries once.
+Both fetchers try the cached cookies first, and ask `cookieFetcher` for a fresh
+login through a headless Firefox SAML flow if the cache is missing or the API
+rejects it.
+
+The stream API primes its providers on the first POST and only returns entries on
+a later one, so `streamFetcher` polls until entries arrive. It also needs an XSRF
+token, which it scrapes from the stream page's HTML — there is no XSRF cookie.
+Filtering by date happens client-side, so `--days` cannot reach further back than
+the window Blackboard itself returns (roughly the last few dozen entries).
 
 ## Delivering reminders
 
