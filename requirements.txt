@@ -1,4 +1,13 @@
+# Union of skills/blackboard/requirements.txt and whatsapp/requirements.txt.
+# Install just one half from its own file if you only need that half.
+
+# skill: Blackboard reading
 playwright>=1.40.0
-pywa>=1.0.0
 requests>=2.31.0
+beautifulsoup4>=4.12.0
 python-dotenv>=1.0.0
+
+# legacy: WhatsApp delivery
+pywa>=1.0.0
+fastapi>=0.110.0
+uvicorn>=0.27.0
